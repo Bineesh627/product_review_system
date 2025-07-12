@@ -1,7 +1,8 @@
 from rest_framework import serializers
-from .models import Product
+from .models import Product, Review
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
+
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,3 +27,11 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             email=validated_data.get('email', '')
         )
         return user
+    
+class ReviewSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user.username')
+    
+    class Meta:
+        model = Review
+        fields = ['id', 'user', 'rating', 'feedback', 'created_at']
+        read_only_fields = ['user']

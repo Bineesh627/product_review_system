@@ -6,14 +6,28 @@ from .permissions import IsAdminUser, IsRegularUser
 from rest_framework import viewsets, status
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import action
-from .serializers import UserRegistrationSerializer, ProductSerializer
+from .serializers import UserRegistrationSerializer, ProductSerializer, ReviewSerializer
 from rest_framework.permissions import IsAuthenticated
-from .models import Product
+from .models import Product, Review
+from django.shortcuts import get_object_or_404
+
+class ReviewViewSet(viewsets.ModelViewSet):
+    serializer_class = ReviewSerializer
+    permission_classes = [IsRegularUser]
+    
+    def get_queryset(self):
+        product_id = self.kwargs['product_pk']
+        return Review.objects.filter(product_id=product_id)
+    
+    def perform_create(self, serializer):
+        product_id = self.kwargs['product_pk']
+        product = get_object_or_404(Product, pk=product_id)
+        serializer.save(user=self.request.user, product=product)
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     
     def get_permissions(self):
         if self.action in ['create', 'update', 'partial_update', 'destroy']:

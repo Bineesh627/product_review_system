@@ -79,11 +79,18 @@ Access the API at `http://127.0.0.1:8000/`
 
 | Endpoint | Method | Description | Access |
 |----------|--------|-------------|--------|
-| `/register/` | POST | User registration | Public |
-| `/login/` | POST | Obtain auth token | Public |
+| `/register/` | POST | User registration | User |
+| `/login/` | POST | Obtain auth token | User/Admin |
 | `/logout/` | POST | Invalidate token | Authenticated |
-| `/products/` | GET | List all products | Public |
+| `/products/` | GET | List all products | User/Admin |
+| `/products/1/` |	GET	| Product details | User/Admin |
 | `/products/` | POST | Create new product | Admin |
+| `/products/1/` | DELETE | Remove product | Admin |
+| `/products/1/` | PUT | Update product | Admin |
+| `/products/1/` | PATCH | Edit product | Admin |
+| `/products/1/reviews/` | GET | List product reviews | User |
+| `/products/1/reviews/` |	POST | Submit review | User |
+
 
 ## Example Requests
 
@@ -105,21 +112,58 @@ curl -X POST http://127.0.0.1:8000/login/ \
 ```bash
 curl -X POST http://127.0.0.1:8000/logout/ \
   -H "Content-Type: application/json" \
-  -H "Authorization: Token token_here" \
+  -H "Authorization: Token ADMIN/USER_TOKEN_HERE"
 ```
 
 **Add Products in Admin**
 ```bash
 curl -X POST http://127.0.0.1:8000/products/ \
   -H "Content-Type: application/json" \
-  -H "Authorization: Token token_here" \
+  -H "Authorization: Token ADMIN_TOKEN_HERE" \
   -D '{"name": "Assus", "description": "Good laptop for playing games","price": 60000}'
 ```
 
 **View Products**
 ```bash
 curl -X GET http://127.0.0.1:8000/products/ \
-  -H "Content-Type: application/json"
+  -H "Content-Type: application/json" \
+  -H "Authorization: Token ADMIN/USER_TOKEN_HERE"
+```
+**Delete Products**
+```bash
+curl -X DELETE http://127.0.0.1:8000/products/1/ \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Token ADMIN_TOKEN_HERE"
+```
+**Update Products Using Put**
+```bash
+curl -X PUT http://127.0.0.1:8000/products/1/ \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Token ADMIN_TOKEN_HERE" \
+  -d '{"name": "lenova", "description": "brand new", "price":1000}'
+```
+
+**Update Products Using Patch**
+```bash
+curl -X PATCH http://127.0.0.1:8000/products/1/ \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Token ADMIN_TOKEN_HERE" \
+  -d '{"price": 1000}'
+```
+
+**Submit Review**
+```bash
+curl -X POST http://127.0.0.1:8000/products/1/reviews/ \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Token USER_TOKEN_HERE" \
+  -d '{"rating": 5, "feedback": "Excellent"}'
+```
+
+**View Product Review**
+```bash
+curl -X GET http://127.0.0.1:8000/products/1/reviews/ \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Token USER_TOKEN_HERE"
 ```
 
 ## Configuration
