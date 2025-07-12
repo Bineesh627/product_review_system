@@ -1,6 +1,12 @@
 from rest_framework import serializers
+from .models import Product
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
+
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ['id', 'name', 'description', 'price', 'average_rating', 'created_at']
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(

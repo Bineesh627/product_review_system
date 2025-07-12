@@ -4,12 +4,14 @@ from .views import (
     UserRegistrationViewSet,
     CustomAuthToken,
     LogoutViewSet,
+    ProductViewSet,
 )
 
 router = DefaultRouter()
 
-router.register(r'', UserRegistrationViewSet, basename='user')
-router.register(r'', LogoutViewSet, basename='logout')
+router.register('', UserRegistrationViewSet, basename='user')
+router.register('', LogoutViewSet, basename='logout')
+router.register(r'products', ProductViewSet)
 
 
 urlpatterns = [

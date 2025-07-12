@@ -6,8 +6,19 @@ from .permissions import IsAdminUser, IsRegularUser
 from rest_framework import viewsets, status
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import action
-from .serializers import UserRegistrationSerializer
+from .serializers import UserRegistrationSerializer, ProductSerializer
 from rest_framework.permissions import IsAuthenticated
+from .models import Product
+
+class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    permission_classes = [AllowAny]
+    
+    def get_permissions(self):
+        if self.action in ['create', 'update', 'partial_update', 'destroy']:
+            self.permission_classes = [IsAdminUser]
+        return super().get_permissions()
 
 class UserRegistrationViewSet(viewsets.GenericViewSet):
     serializer_class = UserRegistrationSerializer
