@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
@@ -11,7 +10,6 @@ from .models import Product, Review
 from django.shortcuts import get_object_or_404
 from django.db import IntegrityError
 from rest_framework.exceptions import ValidationError
-from django.core.exceptions import ObjectDoesNotExist
 
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer

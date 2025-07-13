@@ -1,7 +1,7 @@
+from django.db import IntegrityError
 from rest_framework import serializers
 from .models import Product, Review, User
 from django.contrib.auth.password_validation import validate_password
-from django.core.exceptions import ValidationError as DjangoValidationError
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
@@ -45,10 +45,10 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = ['id', 'name', 'description', 'price', 'average_rating']
         extra_kwargs = {
-            'name': {'required': True, 'allow_blank': False},
+            'name': {'required': False, 'allow_blank': False},
             'description': {'required': False},
             'price': {
-                'required': True,
+                'required': False,
                 'min_value': 0.01,
                 'max_digits': 10,
                 'decimal_places': 2
